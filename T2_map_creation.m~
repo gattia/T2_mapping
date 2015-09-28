@@ -214,18 +214,19 @@ for u=1:length(exam);
         s(play) = 5;
     end
     
-    tic
     for l = 1:length(c); 
-         
-        S=squeeze(map(c(l),r(l),s(l),:));
+        tic
+        
+        S=(map(c,r,s,:));
         [T2fit,G]=fit(TE,S,'exp1'); warning('OFF');
-        T2(c(l),r(l),s(l))=-1/T2fit.b;  % T2 in milliseconds
-        PD(c(l),r(l),s(l))=T2fit.a;  % y-intercept is proton density, PD
-        Rsq(c(l),r(l),s(l))=G.rsquare;  % R^2 fit quality  
-       
+        T2(c,r,s)=-1/T2fit.b;  % T2 in milliseconds
+        PD(c,r,s)=T2fit.a;  % y-intercept is proton density, PD
+        Rsq(c,r,s)=G.rsquare;  % R^2 fit quality  
+        
+        toc
+        display ('Slice 5 completed')
     end
-    toc
-    display ('Slice 5 completed')
+    
     
 %     for z=1:numsl,
 %         tic
