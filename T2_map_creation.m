@@ -1,17 +1,9 @@
-%%  
+ 
 clc 
 clear
 
-% Change directory to the one containing all the images
-% This'll assume there are always 7 TE's per slice
-% First need to get some info about this dataset
 cd('/Volumes/Anthony.Gatti_MacintoshHD/Users/Gatti/Desktop/T2_map_testing')
-% activity=input('What activity Bike or Run ?', 's');
-% participant=input('What participant ? ', 's');
-% exam=input('What exam number ? ');
-% series=input('What series number ? ');
-% eval(['cd T2' num2str(activity) ]);
-% eval(['cd T2' num2str(participant)]);
+
 file=[dir('exam*')];
 
 for e=1:length(file);
@@ -47,36 +39,11 @@ for t=1:length(exam);
     eval(['cd Ser' num2str(series)]);
     
     images=dir('E*');
-    
-%     for test=1:9
-%         eval(['Read=dicominfo(''' 'E' num2str(f) 'S' num2str(series) 'I00' num2str(test) '.MR.dcm' '''); ']);
-%         EchoNumber(test,1)=Read.EchoNumber;
-%     end
-%     
-%     for test=10:20
-%         eval(['Read=dicominfo(''' 'E' num2str(f) 'S' num2str(series) 'I0' num2str(test) '.MR.dcm' '''); ']);
-%         EchoNumber(test,1)=Read.EchoNumber;
-%     end
-%     
-%     echos=max(EchoNumber)
+
     numsl=length(images)/echos;
 
-%     eval(['numsl_' num2str(f) '=length(images)/echos;' ]);
 
 
-
-   
-% for time=1:length(exam);
-
-% slicer=input('location of T2 images exported from slicer', 's');
-
-% T2orig=nrrdread(slicer);
-
-% one thing weird about these images is the numbering skips the 2nd number of
-% every group of 7 TEs- so 1,_,3,4,5,6,7,8, 9,_,11,12,13,14,15,16,17,_,19.
-% I had to deal with that with an index variable in the double nested loop.
-% This creates a 4D matrix of all the images: 
-% II=[width,height,slice,echo]
 
 imref=[1:numsl];
 index=0; 
@@ -208,13 +175,10 @@ for u=1:length(exam);
     Rsq = zeros(size(map(:,:,:))) ;
 
     
-    [c,r,s,e] = ind2sub(size(map),find(map(:,:,:,1)>350 & map(:,:,:,1)<3750)); % c= column (y), r= row (x), s=slice, e=echo
-    
-    for play = length(s)
-        s(play) = 5;
-    end
+    [c,r,s,e] = ind2sub(size(map),find(map(:,:,5,1)>500 & map(:,:,5,1)<2100)); % c= column (y), r= row (x), s=slice, e=echo
     
     tic
+    
     for l = 1:length(c); 
          
         S=squeeze(map(c(l),r(l),s(l),:));
@@ -224,6 +188,7 @@ for u=1:length(exam);
         Rsq(c(l),r(l),s(l))=G.rsquare;  % R^2 fit quality  
        
     end
+    
     toc
     display ('Slice 5 completed')
     
